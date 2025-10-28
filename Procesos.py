@@ -22,6 +22,48 @@ class Procesos:
         self.duracion_de_rafaga = duracion_de_rafaga
         self.duracion_de_entrada_salida = duracion_de_entrada_salida
         self.prioridad_externa = prioridad_externa
+        ###datos de lo que seria la "pcb"
+        self.Tiempo_de_Rafaga_Restante = duracion_de_rafaga
+        self.Rafagas_restantes = cantidad_de_rafagas
+        self.Tiempo_de_Inicio = 0
+        self.Tuplas = []
+
+    def get_Nombre(self):
+        return self.nombre  
+    def get_Tiempo_de_Arribo(self): 
+        return self.tiempo_de_arribo
+    def get_Cantidad_de_Rafagas(self):
+        return self.cantidad_de_rafagas
+    def get_Duracion_de_Rafaga(self):
+        return self.duracion_de_rafaga
+    def get_Duracion_de_Entrada_Salida(self):
+        return self.duracion_de_entrada_salida
+    def get_Prioridad_Externa(self):
+        return self.prioridad_externa
+
+    def Consumir_Rafaga(self):
+        self.Tiempo_de_Rafaga_Restante -= 1
+
+    def get_Tiempo_de_Rafaga_Restante(self):
+        return self.Tiempo_de_Rafaga_Restante
+
+    def Reducir_Rafagas_restantes(self):
+        self.Rafagas_restantes -= 1
+
+    def get_Rafagas_restantes(self):
+        return self.Rafagas_restantes
+
+    def set_Tiempo_de_inicio(self, tiempo:int ):
+        self.Tiempo_de_inicio = tiempo
+
+    def get_Tiempo_de_Inicio(self):
+        return self.Tiempo_de_inicio
+
+    def agregarTupla(self,tupla):
+        self.Tuplas.append(tupla)
+
+    def verTuplas(self):
+        return self.Tuplas       
 
     def __repr__(self) -> str:
         return (f"Proceso({self.nombre}, Arribo={self.tiempo_de_arribo}, "
@@ -29,3 +71,4 @@ class Procesos:
                 f"DuraciónRáfaga={self.duracion_de_rafaga}, "
                 f"E/S={self.duracion_de_entrada_salida}, "
                 f"Prioridad={self.prioridad_externa})")
+    
