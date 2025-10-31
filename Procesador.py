@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from Procesos import Proceso
 class Procesador:
     def __init__(self,TIP:int,TCP:int,TFP:int,Quantum:int,Cola_de_Espera : list[Proceso])-> None:
@@ -16,6 +17,7 @@ class Procesador:
         self.Cola_de_Bloqueado = []
         self.Cola_de_Terminado = []
         self.ProcesoCargado = None
+        self.tiempo = 0
 
     def Cargar_Procesos(self, procesos):
         if not isinstance(procesos, list):
@@ -36,14 +38,16 @@ class Procesador:
                 proceso.reset_Tiempo_de_Entrada_Salida_Restante()
                 self.Cola_de_Listos.append(proceso)
 
-    def AceptarProcesos(self,tiempo):
+    def AceptarProcesos(self):
         self.Cola_de_Espera.sort(key=lambda p: p.Proceso.tiempo_de_arribo)
-        if self.Cola_de_Espera[0].Proceso.tiempo_de_arribo <= tiempo:
+        if self.Cola_de_Espera[0].Proceso.tiempo_de_arribo <= self.tiempo:
             proceso = self.Cola_de_Espera.pop(0)
             self.Cola_de_Listos.append(proceso)
             for _ in range(self.TIP):  ##una vez se acepta un proceso, se cuenta el tiempo de inicio de proceso (tip)
-                tiempo += 1
+                self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados() ### decremento los tiempos de los procesos bloqueados mientras espero el tip
-                
+            self.AceptarProcesos()  ##verifico si hay mas procesos para aceptar en el mismo tiempo
+
+    @abstractmethod
     def simulacion(self):
         pass
