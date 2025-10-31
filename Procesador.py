@@ -1,20 +1,21 @@
-from Proceso import Proceso
-from Strategy import Strategy
+from Procesos import Proceso
 class Procesador:
-    def __init__(self,TIP:int,TCP:int,TFP:int,strategy:Strategy )-> None:
-        if not all(isinstance(valor, (int)) and valor >= 0 for valor in [TIP, TCP, TFP]):
-            raise ValueError("TIP, TCP y TFP deben ser números no negativos.")
-        if not isinstance(strategy, Strategy):
-            raise TypeError("strategy debe ser una instancia de la clase Strategy.") 
+    def __init__(self,TIP:int,TCP:int,TFP:int,Quantum:int,Cola_de_Espera : list[Proceso])-> None:
+        if not all(isinstance(valor, (int)) and valor >= 0 for valor in [TIP, TCP, TFP, Quantum]):
+            raise ValueError("TIP, TCP, TFP y Quantum deben ser números enteros no negativos.")
+        if not isinstance(Cola_de_Espera, list):
+            raise TypeError("Cola_de_Espera debe ser una lista de procesos.")
+            if not all(isinstance(p, Proceso) for p in Cola_de_Espera):
+                raise TypeError("Todos los elementos de Cola_de_Espera deben ser instancias de la clase Proceso.")
         self.TIP = TIP  # Tiempo de Intercambio de Procesador
         self.TCP = TCP  # Tiempo de Cambio de Proceso   
         self.TFP = TFP  # Tiempo de Finalización de Proceso
-        self.strategy = strategy
+        self.Quantum = Quantum  # Tiempo de Quantum
         self.Cola_de_Listos = []
         self.Cola_de_Espera = []
         self.Cola_de_Bloqueado = []
         self.Cola_de_Terminado = []
-        self.ProcesoCargado : Proceso = None
+        self.ProcesoCargado = None
 
     def Cargar_Procesos(self, procesos):
         if not isinstance(procesos, list):
@@ -28,19 +29,21 @@ class Procesador:
             return True
         return False
 
+    def Decrementar_Tiempos_bloqueados(self):
+        for proceso in self.Cola_de_Bloqueado:
+            proceso.reducir_Tiempo_de_Entrada_Salida_Restante()
+            if proceso.get_Duracion_de_Entrada_Salida_Restante() == 0:
+                proceso.reset_Tiempo_de_Entrada_Salida_Restante()
+                self.Cola_de_Listos.append(proceso)
+
     def AceptarProcesos(self,tiempo):
         self.Cola_de_Espera.sort(key=lambda p: p.Proceso.tiempo_de_arribo)
-        if self.Cola_de_Espera[0].Proceso.tiempo_de_arribo == tiempo:
+        if self.Cola_de_Espera[0].Proceso.tiempo_de_arribo <= tiempo:
             proceso = self.Cola_de_Espera.pop(0)
             self.Cola_de_Listos.append(proceso)
-            tiempo+=self.TIP
-
-    def EjecutarRafaga(self,tiempo):
-        Strategy.ejecutar(self.TCP, self.TFP, self.tiempo, self.cola_de_terminados, self.cola_de_Bloqueados, self.cola_de_listos, self.proceso_cargado)    
-
+            for _ in range(self.TIP):  ##una vez se acepta un proceso, se cuenta el tiempo de inicio de proceso (tip)
+                tiempo += 1
+                self.Decrementar_Tiempos_bloqueados() ### decremento los tiempos de los procesos bloqueados mientras espero el tip
+                
     def simulacion(self):
-        tiempo = 0
-        while not self.FinalizoSimulacion():
-            self.AceptarProcesos(tiempo)
-            self.EjecutarRafaga(tiempo)
-            tiempo += 1
+        pass

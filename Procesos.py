@@ -1,4 +1,4 @@
-class Procesos:
+class Proceso:
     def __init__(self, nombre: str, tiempo_de_arribo: float, cantidad_de_rafagas: int,
                  duracion_de_rafaga: float, duracion_de_entrada_salida: float, prioridad_externa: int) -> None:
         
@@ -23,6 +23,7 @@ class Procesos:
         self.duracion_de_entrada_salida = duracion_de_entrada_salida
         self.prioridad_externa = prioridad_externa
         ###datos de lo que seria la "pcb"
+        self.duracion_de_entrada_salida_restante = duracion_de_entrada_salida
         self.Tiempo_de_Rafaga_Restante = duracion_de_rafaga
         self.Rafagas_restantes = cantidad_de_rafagas
         self.Tiempo_de_Inicio = 0
@@ -41,11 +42,16 @@ class Procesos:
     def get_Prioridad_Externa(self):
         return self.prioridad_externa
 
+
+    
     def Consumir_Rafaga(self):
         self.Tiempo_de_Rafaga_Restante -= 1
 
     def get_Tiempo_de_Rafaga_Restante(self):
         return self.Tiempo_de_Rafaga_Restante
+    
+    def reset_Tiempo_de_Rafaga_Restante(self):
+        self.Tiempo_de_Rafaga_Restante = self.duracion_de_rafaga
 
     def Reducir_Rafagas_restantes(self):
         self.Rafagas_restantes -= 1
@@ -64,6 +70,12 @@ class Procesos:
 
     def verTuplas(self):
         return self.Tuplas       
+    
+    def reducir_Tiempo_de_Entrada_Salida_Restante(self):
+        self.duracion_de_entrada_salida_restante -= 1
+
+    def get_Duracion_de_Entrada_Salida_Restante(self):
+        return self.duracion_de_entrada_salida_restante
 
     def __repr__(self) -> str:
         return (f"Proceso({self.nombre}, Arribo={self.tiempo_de_arribo}, "
