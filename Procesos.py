@@ -65,8 +65,8 @@ class Proceso:
     def get_Tiempo_de_Inicio(self):
         return self.Tiempo_de_inicio
 
-    def agregarTupla(self,tupla):
-        self.Tuplas.append(tupla)
+    def registrar_evento(self, inicio: int, duracion: int, tipo: str):
+        self.Tuplas.append((inicio, duracion, tipo))
 
     def verTuplas(self):
         return self.Tuplas       

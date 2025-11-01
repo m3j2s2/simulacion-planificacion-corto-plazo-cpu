@@ -42,10 +42,14 @@ class Procesador:
         self.Cola_de_Espera.sort(key=lambda p: p.Proceso.tiempo_de_arribo)
         if self.Cola_de_Espera[0].Proceso.tiempo_de_arribo <= self.tiempo:
             proceso = self.Cola_de_Espera.pop(0)
+            inicio_de_evento=self.tiempo
+            duracion_de_evento=0
             self.Cola_de_Listos.append(proceso)
             for _ in range(self.TIP):  ##una vez se acepta un proceso, se cuenta el tiempo de inicio de proceso (tip)
+                duracion_de_evento+=1
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados() ### decremento los tiempos de los procesos bloqueados mientras espero el tip
+            proceso.registrar_evento(inicio_de_evento,duracion_de_evento,'tip')
             self.AceptarProcesos()  ##verifico si hay mas procesos para aceptar en el mismo tiempo
 
     @abstractmethod
