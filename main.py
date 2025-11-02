@@ -1,4 +1,4 @@
-from interfaz import iniciar_aplicacion
+from Interfaz import iniciar_aplicacion
 
 if __name__ == "__main__":
     iniciar_aplicacion()

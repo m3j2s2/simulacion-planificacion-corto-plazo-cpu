@@ -7,7 +7,7 @@ class FCFS(Procesador):
         super().__init__(TIP, TCP, TFP, Quantum, Cola_de_Espera)
 
     def simulacion(self):
-        self.tiempo = 0
+        self.tiempo = 0     
         while not self.FinalizoSimulacion():
             self.AceptarProcesos()
             if self.Cola_de_Listos:                                ## si hay procesos en la cola de listos
@@ -25,7 +25,7 @@ class FCFS(Procesador):
                     self.ProcesoCargado.Consumir_Rafaga() 
                     duracion_de_evento+=1
                     self.tiempo += 1
-                self.ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,'cpu')
+                self.ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
                 self.ProcesoCargado.Reducir_Rafagas_restantes()         ## reduzco la cantidad de rafagas restantes
                 if self.ProcesoCargado.get_Rafagas_restantes() > 0:     ## si quedan rafagas, lo bloqueo
                     self.Cola_de_Bloqueado.append(self.ProcesoCargado)  
@@ -33,8 +33,7 @@ class FCFS(Procesador):
                 else:
                     self.Cola_de_Terminado.append(self.ProcesoCargado) ## si no quedan rafagas, lo termino
                     self.ProcesoCargado.registrar_evento(self.tiempo,self.TFP,"Finalizacion")
-                self.ProcesoCargado = None
-            self.tiempo += 1
-
-
-            
+                    self.tiempo += self.TFP
+            else :
+                self.tiempo += 1
+                self.Decrementar_Tiempos_bloqueados()

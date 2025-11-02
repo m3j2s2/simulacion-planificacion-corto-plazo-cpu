@@ -11,7 +11,7 @@ class SimuladorPlanificacion:
     def __init__(self, root):
         self.root = root
         self.root.title("Simulador de Planificación de Procesador")
-        self.root.geometry("1200x750")p
+        self.root.geometry("1200x750")
         self.root.configure(bg="#2b2b2b")
         
         self.procesos = []
@@ -124,7 +124,8 @@ class SimuladorPlanificacion:
         
         scrollbar_y = ttk.Scrollbar(frame_tabla, orient=tk.VERTICAL, command=self.tree.yview)
         scrollbar_x = ttk.Scrollbar(frame_tabla, orient=tk.HORIZONTAL, command=self.tree.xview)
-        self.tree.configure(yscroll=scrollbar_y.set, xscroll=scrollbar_x.set)
+        self.tree.configure(yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)
+
         
         self.tree.grid(row=0, column=0, sticky="nsew")
         scrollbar_y.grid(row=0, column=1, sticky="ns")

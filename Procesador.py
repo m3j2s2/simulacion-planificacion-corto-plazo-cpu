@@ -12,11 +12,11 @@ class Procesador:
         self.TCP = TCP  # Tiempo de Cambio de Proceso   
         self.TFP = TFP  # Tiempo de Finalización de Proceso
         self.Quantum = Quantum  # Tiempo de Quantum
-        self.Cola_de_Listos = []
-        self.Cola_de_Espera = []
-        self.Cola_de_Bloqueado = []
-        self.Cola_de_Terminado = []
-        self.ProcesoCargado = None
+        self.Cola_de_Listos : list[Proceso] = []
+        self.Cola_de_Espera : list[Proceso] = Cola_de_Espera
+        self.Cola_de_Bloqueado  : list[Proceso] = []
+        self.Cola_de_Terminado : list[Proceso]= []
+        self.ProcesoCargado : Proceso
         self.tiempo = 0
 
     def Cargar_Procesos(self, procesos):
@@ -36,11 +36,13 @@ class Procesador:
             proceso.reducir_Tiempo_de_Entrada_Salida_Restante()
             if proceso.get_Duracion_de_Entrada_Salida_Restante() == 0:
                 proceso.reset_Tiempo_de_Entrada_Salida_Restante()
+                self.Cola_de_Bloqueado.remove(proceso)
                 self.Cola_de_Listos.append(proceso)
 
+
     def AceptarProcesos(self):
-        self.Cola_de_Espera.sort(key=lambda p: p.Proceso.tiempo_de_arribo)
-        if self.Cola_de_Espera[0].Proceso.tiempo_de_arribo <= self.tiempo:
+        self.Cola_de_Espera.sort(key=lambda p: p.tiempo_de_arribo)
+        if self.Cola_de_Espera and self.Cola_de_Espera[0].tiempo_de_arribo <= self.tiempo:
             proceso = self.Cola_de_Espera.pop(0)
             inicio_de_evento=self.tiempo
             duracion_de_evento=0

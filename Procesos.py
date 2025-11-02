@@ -1,10 +1,7 @@
 class Proceso:
-    def __init__(self, nombre: str, tiempo_de_arribo: float, cantidad_de_rafagas: int,
-                 duracion_de_rafaga: float, duracion_de_entrada_salida: float, prioridad_externa: int) -> None:
-        
-        if not isinstance(nombre, str):
-            raise TypeError("El nombre debe ser una cadena (str).")
-        
+    def __init__(self, nombre: str, tiempo_de_arribo: int, cantidad_de_rafagas: int,
+                 duracion_de_rafaga: int, duracion_de_entrada_salida: int, prioridad_externa: int) -> None:
+
         for valor, nombre_campo in [
             (tiempo_de_arribo, "tiempo_de_arribo"),
             (cantidad_de_rafagas, "cantidad_de_rafagas"),
@@ -12,7 +9,7 @@ class Proceso:
             (duracion_de_entrada_salida, "duracion_de_entrada_salida"),
             (prioridad_externa, "prioridad_externa")
         ]:
-            if not (isinstance(valor, (int, float)) and valor > 0):
+            if not (isinstance(valor, (int)) and valor >= 0):
                 raise ValueError(f"'{nombre_campo}' debe ser un número positivo.")
         
         
@@ -53,6 +50,8 @@ class Proceso:
     def reset_Tiempo_de_Rafaga_Restante(self):
         self.Tiempo_de_Rafaga_Restante = self.duracion_de_rafaga
 
+    
+
     def Reducir_Rafagas_restantes(self):
         self.Rafagas_restantes -= 1
 
@@ -73,6 +72,9 @@ class Proceso:
     
     def reducir_Tiempo_de_Entrada_Salida_Restante(self):
         self.duracion_de_entrada_salida_restante -= 1
+
+    def reset_Tiempo_de_Entrada_Salida_Restante(self):
+        self.duracion_de_entrada_salida_restante = self.duracion_de_entrada_salida
 
     def get_Duracion_de_Entrada_Salida_Restante(self):
         return self.duracion_de_entrada_salida_restante
