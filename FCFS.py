@@ -37,3 +37,4 @@ class FCFS(Procesador):
             else :
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados()
+        self.Cola_de_Terminado.sort(key=lambda x: x.get_Tiempo_de_Arribo())
