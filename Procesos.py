@@ -42,7 +42,8 @@ class Proceso:
 
     
     def Consumir_Rafaga(self):
-        self.Tiempo_de_Rafaga_Restante -= 1
+        if self.Tiempo_de_Rafaga_Restante > 0:
+            self.Tiempo_de_Rafaga_Restante -= 1
 
     def get_Tiempo_de_Rafaga_Restante(self):
         return self.Tiempo_de_Rafaga_Restante

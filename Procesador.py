@@ -16,7 +16,6 @@ class Procesador:
         self.Cola_de_Espera : list[Proceso] = Cola_de_Espera
         self.Cola_de_Bloqueado  : list[Proceso] = []
         self.Cola_de_Terminado : list[Proceso]= []
-        self.ProcesoCargado : Proceso
         self.tiempo = 0
 
     def Cargar_Procesos(self, procesos):
@@ -36,6 +35,7 @@ class Procesador:
             proceso.reducir_Tiempo_de_Entrada_Salida_Restante()
             if proceso.get_Duracion_de_Entrada_Salida_Restante() == 0:
                 proceso.reset_Tiempo_de_Entrada_Salida_Restante()
+                proceso.reset_Tiempo_de_Rafaga_Restante() 
                 self.Cola_de_Bloqueado.remove(proceso)
                 self.Cola_de_Listos.append(proceso)
 
