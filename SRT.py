@@ -22,9 +22,9 @@ class SRT(Procesador):
                 inicio_de_evento = self.tiempo
                 duracion_de_evento = 0
                 
-                while ProcesoCargado == self.Cola_de_Listos[0] and ProcesoCargado.get_Tiempo_de_Rafaga_Restante() > 0: ## ejecuto toda la rafaga
+                while ProcesoCargado == self.Cola_de_Listos[0] and ProcesoCargado.get_Tiempo_de_Rafaga_Restante() > 0: ## siempre se ordena por remaning time asi que a la que ya no concuerde el mas corto con el proceso cargado, se corta
                     ProcesoCargado.Consumir_Rafaga() 
-                    self.Decrementar_Tiempos_bloqueados()
+                    self.Decrementar_Tiempos_bloqueados() ##decremetento el tiempo de e/s de los procesos bloqueados ya que sino no salen de ahi 
                     self.OrdernarLaColadeListosPorRafaga()
                     duracion_de_evento+=1
                     self.tiempo += 1

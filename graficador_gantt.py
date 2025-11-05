@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+# por una cuestion de la extension pylance, el import me lo marca como error pero el programa compila asi que le coloque el ignore
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk # type: ignore
 from matplotlib.figure import Figure
 import matplotlib.patches as mpatches
