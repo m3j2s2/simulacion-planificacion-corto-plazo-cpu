@@ -8,50 +8,28 @@ on:
 jobs:
   build-macos:
     runs-on: macos-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
+        python-version: '3.10'
+
+    - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller matplotlib numpy
-    
-    - name: Build executable
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Build Executable
       run: |
-        pyinstaller --onefile --windowed --name "SimuladorProcesos" --add-data "Tandas:Tandas" interfaz.py
-    
-    - name: Upload artifact
+        pyinstaller --onefile interfaz.py
+
+    - name: Upload Executable Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: SimuladorProcesos-macOS
-        path: dist/SimuladorProcesos
-```
-
-**Guarda** el archivo (`Ctrl + S`)
-
----
-
-### **PASO 3: Actualizar el .gitignore (opcional pero recomendado)**
-
-Si no tienes un archivo `.gitignore` en la raíz, créalo:
-```
-# Python
-__pycache__/
-*.pyc
-
-# PyInstaller
-build/
-dist/
-dist-linux/
-*.spec
-
-# Sistema
-.DS_Store
-Thumbs.db
+        name: macOS-app
+        path: dist/
