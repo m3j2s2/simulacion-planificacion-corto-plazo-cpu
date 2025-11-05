@@ -8,11 +8,7 @@ class SRT(Procesador):
 
     def OrdernarLaColadeListosPorRafaga(self):
         self.Cola_de_Listos.sort(key=lambda x: x.get_Tiempo_de_Rafaga_Restante())
-
-    def imprimir(self):
-        for proceso in self.Cola_de_Listos:
-            print(proceso.nombre ,"duracion",proceso.Tiempo_de_Rafaga_Restante)
-
+        
     def simulacion(self):
         self.tiempo = 0     
         while not self.FinalizoSimulacion():
@@ -25,7 +21,7 @@ class SRT(Procesador):
                 for _ in range(self.TCP): self.Decrementar_Tiempos_bloqueados()          ## decremento los tiempos de los procesos bloqueados mientras espero el tcp
                 inicio_de_evento = self.tiempo
                 duracion_de_evento = 0
-                print(ProcesoCargado.nombre," remaning time" ,ProcesoCargado.Tiempo_de_Rafaga_Restante)
+                
                 while ProcesoCargado == self.Cola_de_Listos[0] and ProcesoCargado.get_Tiempo_de_Rafaga_Restante() > 0: ## ejecuto toda la rafaga
                     ProcesoCargado.Consumir_Rafaga() 
                     self.Decrementar_Tiempos_bloqueados()
@@ -35,7 +31,7 @@ class SRT(Procesador):
                 ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
                 if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0 :
                     self.Cola_de_Listos.remove(ProcesoCargado)
-                    print(self.imprimir())
+                   
                     ProcesoCargado.Reducir_Rafagas_restantes()         ## reduzco la cantidad de rafagas restantes
                     if ProcesoCargado.get_Rafagas_restantes() > 0:      ## si quedan rafagas, lo bloqueo
                         self.Cola_de_Bloqueado.append(ProcesoCargado)  

@@ -11,7 +11,7 @@ class RoundRobin(Procesador):
         while not self.FinalizoSimulacion():
             self.AceptarProcesos()
             if self.Cola_de_Listos:                                ## si hay procesos en la cola de listos
-                ProcesoCargado = self.Cola_de_Listos[0]   ## elijo el primer proceso de la cola de listos(el mas corto debido el ordenamiento)
+                ProcesoCargado = self.Cola_de_Listos.pop(0)   ## elijo el primer proceso de la cola de listos(el mas corto debido el ordenamiento)
                 inicio_de_evento=self.tiempo
                 duracion_de_evento=0
                 for _ in range(self.TCP):                          ## cargo el proceso y por lo tanto cuento el tiempo de cambio de proceso (tcp)
@@ -28,8 +28,7 @@ class RoundRobin(Procesador):
                     duracion_de_evento+=1
                     self.tiempo += 1
                 ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
-                if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0:
-                    self.Cola_de_Listos.remove(ProcesoCargado) 
+                if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0: 
                     ProcesoCargado.Reducir_Rafagas_restantes()         ## reduzco la cantidad de rafagas restantes
                     if ProcesoCargado.get_Rafagas_restantes() > 0:     ## si quedan rafagas, lo bloqueo
                         self.Cola_de_Bloqueado.append(ProcesoCargado)  
@@ -38,6 +37,8 @@ class RoundRobin(Procesador):
                         self.Cola_de_Terminado.append(ProcesoCargado) ## si no quedan rafagas, lo termino
                         ProcesoCargado.registrar_evento(self.tiempo,self.TFP,"Finalizacion")
                         self.tiempo += self.TFP
+                else:
+                    self.Cola_de_Listos.append(ProcesoCargado)
             else :
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados()
