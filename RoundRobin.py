@@ -14,11 +14,13 @@ class RoundRobin(Procesador):
                 ProcesoCargado = self.Cola_de_Listos.pop(0)   ## elijo el primer proceso de la cola de listos(el mas corto debido el ordenamiento)
                 inicio_de_evento=self.tiempo
                 duracion_de_evento=0
+                self.registro_eventos.registrar_carga_proceso(self.tiempo, ProcesoCargado.nombre)
                 for _ in range(self.TCP):                          ## cargo el proceso y por lo tanto cuento el tiempo de cambio de proceso (tcp)
                     self.tiempo += 1
                     duracion_de_evento+=1                                                    
                     self.Decrementar_Tiempos_bloqueados()          ## decremento los tiempos de los procesos bloqueados mientras espero el tcp
                 ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,'tcp')
+                self.registro_eventos.registrar_fin_carga_proceso(self.tiempo, ProcesoCargado.nombre)
                 inicio_de_evento = self.tiempo
                 duracion_de_evento = 0
                 quantum = self.Quantum

@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from Procesos import Proceso
+from RegistroEventos import RegistroEventos
 class Procesador:
     def __init__(self,TIP:int,TCP:int,TFP:int,Quantum:int,Cola_de_Espera : list[Proceso])-> None:
         if not all(isinstance(valor, (int)) and valor >= 0 for valor in [TIP, TCP, TFP, Quantum]):
@@ -17,6 +18,7 @@ class Procesador:
         self.Cola_de_Bloqueado  : list[Proceso] = []
         self.Cola_de_Terminado : list[Proceso]= []
         self.tiempo = 0
+        self.registro_eventos = RegistroEventos() #esto es lo que me va a ayudar a crear el archivo con el seguimiento del programa
 
     def Cargar_Procesos(self, procesos):
         if not isinstance(procesos, list):
@@ -38,13 +40,14 @@ class Procesador:
                 proceso.reset_Tiempo_de_Rafaga_Restante() 
                 self.Cola_de_Bloqueado.remove(proceso)
                 self.Cola_de_Listos.append(proceso)
-                print( "en el tiempo ",self.tiempo," sale", proceso.nombre, "de la cola de bloqueados")
+                self.registro_eventos.registrar_proceso_desbloqueado(self.tiempo, proceso.nombre)
 
 
     def AceptarProcesos(self):
         self.Cola_de_Espera.sort(key=lambda p: p.tiempo_de_arribo)
         if self.Cola_de_Espera and self.Cola_de_Espera[0].tiempo_de_arribo <= self.tiempo:
             proceso = self.Cola_de_Espera.pop(0)
+            self.registro_eventos.registrar_arribo_proceso(self.tiempo, proceso.nombre)
             inicio_de_evento=self.tiempo
             duracion_de_evento=0
             self.Cola_de_Listos.append(proceso)
@@ -53,6 +56,7 @@ class Procesador:
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados() ### decremento los tiempos de los procesos bloqueados mientras espero el tip
             proceso.set_Tiempo_de_inicio(self.tiempo)
+            self.registro_eventos.registrar_incorporacion_proceso(self.tiempo, proceso.nombre)
             proceso.registrar_evento(inicio_de_evento,duracion_de_evento,'tip')
             self.AceptarProcesos()  ##verifico si hay mas procesos para aceptar en el mismo tiempo
 

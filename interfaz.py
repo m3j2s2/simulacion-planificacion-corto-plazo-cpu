@@ -22,6 +22,7 @@ class SimuladorGUI:
         self.politica_var = tk.StringVar()
         
         self.procesos_data = []
+        self.processor = None  # Guardar referencia al procesador
         
         # Crear interfaz
         self.crear_interfaz()
@@ -282,21 +283,67 @@ class SimuladorGUI:
             return
         
         # Crear y ejecutar procesador
-        processor = self._crear_procesador(tip, tcp, tfp, quantum, cola_espera)
-        if processor is None:
+        self.processor = self._crear_procesador(tip, tcp, tfp, quantum, cola_espera)
+        if self.processor is None:
             return
         
-        if not self._ejecutar_simulacion(processor):
+        if not self._ejecutar_simulacion(self.processor):
             return
         
         # Graficar resultados
-        procesos_a_graficar = self._obtener_procesos_para_graficar(processor, cola_espera)
+        procesos_a_graficar = self._obtener_procesos_para_graficar(self.processor, cola_espera)
         if not procesos_a_graficar:
             messagebox.showinfo("Resultado", "La simulación terminó pero no hay eventos para graficar.")
             return
         
         self._graficar_resultados(procesos_a_graficar)
-        messagebox.showinfo("Simulación", "Simulación finalizada y resultados graficados.")
+        
+        # Preguntar si quiere guardar el archivo de eventos
+        self._preguntar_guardar_eventos()
+    
+    def _preguntar_guardar_eventos(self):
+        """Pregunta al usuario si desea guardar el archivo de eventos"""
+        respuesta = messagebox.askyesno(
+            "Simulación Finalizada",
+            "La simulación ha finalizado correctamente.\n\n¿Desea guardar el registro de eventos?"
+        )
+        
+        if respuesta:
+            self._guardar_archivo_eventos()
+    
+    def _guardar_archivo_eventos(self):
+        """Abre un diálogo para guardar el archivo de eventos"""
+        if self.processor is None or not hasattr(self.processor, 'registro_eventos'):
+            messagebox.showerror("Error", "No hay eventos para guardar")
+            return
+        
+        # Obtener nombre de archivo sugerido
+        politica = self.politica_var.get().replace(" ", "_")
+        nombre_sugerido = f"eventos_simulacion_{politica}.txt"
+        
+        # Abrir diálogo para guardar archivo
+        ruta_archivo = filedialog.asksaveasfilename(
+            title="Guardar registro de eventos",
+            initialfile=nombre_sugerido,
+            defaultextension=".txt",
+            filetypes=[
+                ("Archivos de texto", "*.txt"),
+                ("Todos los archivos", "*.*")
+            ]
+        )
+        
+        if ruta_archivo:
+            try:
+                self.processor.registro_eventos.generar_archivo_texto(ruta_archivo)
+                messagebox.showinfo(
+                    "Éxito",
+                    f"El registro de eventos se guardó exitosamente en:\n{ruta_archivo}"
+                )
+            except Exception as e:
+                messagebox.showerror(
+                    "Error",
+                    f"No se pudo guardar el archivo:\n{str(e)}"
+                )
     
     def _validar_datos(self):
         if not self.procesos_data:
