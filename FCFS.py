@@ -22,7 +22,8 @@ class FCFS(Procesador):
                 inicio_de_evento = self.tiempo
                 duracion_de_evento = 0
                 for _ in range(int(ProcesoCargado.get_Duracion_de_Rafaga())): ## ejecuto toda la rafaga
-                    ProcesoCargado.Consumir_Rafaga() 
+                    ProcesoCargado.Consumir_Rafaga()
+                    self.Decrementar_Tiempos_bloqueados()  
                     duracion_de_evento+=1
                     self.tiempo += 1
                 ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
@@ -34,6 +35,8 @@ class FCFS(Procesador):
                     self.Cola_de_Terminado.append(ProcesoCargado) ## si no quedan rafagas, lo termino
                     ProcesoCargado.registrar_evento(self.tiempo,self.TFP,"Finalizacion")
                     self.tiempo += self.TFP
+                    for _ in range(self.TFP): self.Decrementar_Tiempos_bloqueados()
+                    ProcesoCargado.set_Tiempo_de_Retorno(self.tiempo) 
             else :
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados()

@@ -38,6 +38,7 @@ class Procesador:
                 proceso.reset_Tiempo_de_Rafaga_Restante() 
                 self.Cola_de_Bloqueado.remove(proceso)
                 self.Cola_de_Listos.append(proceso)
+                print( "en el tiempo ",self.tiempo," sale", proceso.nombre, "de la cola de bloqueados")
 
 
     def AceptarProcesos(self):
@@ -51,9 +52,12 @@ class Procesador:
                 duracion_de_evento+=1
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados() ### decremento los tiempos de los procesos bloqueados mientras espero el tip
+            proceso.set_Tiempo_de_inicio(self.tiempo)
             proceso.registrar_evento(inicio_de_evento,duracion_de_evento,'tip')
             self.AceptarProcesos()  ##verifico si hay mas procesos para aceptar en el mismo tiempo
 
     @abstractmethod
     def simulacion(self):
         pass
+
+    

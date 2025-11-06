@@ -37,6 +37,7 @@ class RoundRobin(Procesador):
                         self.Cola_de_Terminado.append(ProcesoCargado) ## si no quedan rafagas, lo termino
                         ProcesoCargado.registrar_evento(self.tiempo,self.TFP,"Finalizacion")
                         self.tiempo += self.TFP
+                        ProcesoCargado.set_Tiempo_de_Retorno(self.tiempo) 
                 else:
                     self.Cola_de_Listos.append(ProcesoCargado)
             else :

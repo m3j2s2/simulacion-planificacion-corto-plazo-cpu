@@ -24,6 +24,8 @@ class Proceso:
         self.Tiempo_de_Rafaga_Restante = duracion_de_rafaga
         self.Rafagas_restantes = cantidad_de_rafagas
         self.Tiempo_de_Inicio = 0
+        self.tiempo_de_retorno = 0
+        self.tiempo_de_retorno_normalizado = 0
         self.Tuplas = []
 
     def get_Nombre(self):
@@ -38,9 +40,19 @@ class Proceso:
         return self.duracion_de_entrada_salida
     def get_Prioridad_Externa(self):
         return self.prioridad_externa
-
-
     
+    def set_Tiempo_de_Retorno(self,tiempo: int):
+        self.tiempo_de_retorno = tiempo - self.Tiempo_de_Inicio
+
+    def get_Tiempo_de_Retorno(self):
+        return self.tiempo_de_retorno
+
+    def get_tiempo_de_retorno_normalizado(self):
+        if self.Tiempo_de_Inicio != 0 and self.tiempo_de_retorno != 0 : 
+            return self.tiempo_de_retorno/(self.duracion_de_rafaga*self.cantidad_de_rafagas)
+        else: 
+            return -1
+
     def Consumir_Rafaga(self):
         if self.Tiempo_de_Rafaga_Restante > 0:
             self.Tiempo_de_Rafaga_Restante -= 1
