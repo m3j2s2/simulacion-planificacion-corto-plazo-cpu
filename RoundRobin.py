@@ -30,21 +30,27 @@ class RoundRobin(Procesador):
                     duracion_de_evento+=1
                     self.tiempo += 1
                     self.Decrementar_Tiempos_bloqueados()
+                self.registro_eventos.registrar_inicio_rafaga(inicio_de_evento, ProcesoCargado.nombre)
                 ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
-                if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0: 
+                if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0:
+                    self.registro_eventos.registrar_fin_rafaga(self.tiempo, ProcesoCargado.nombre)
                     ProcesoCargado.Reducir_Rafagas_restantes()         ## reduzco la cantidad de rafagas restantes
                     if ProcesoCargado.get_Rafagas_restantes() > 0:     ## si quedan rafagas, lo bloqueo
-                        self.Cola_de_Bloqueado.append(ProcesoCargado)  
+                        self.Cola_de_Bloqueado.append(ProcesoCargado)
+                        self.registro_eventos.registrar_proceso_bloqueado(self.tiempo, ProcesoCargado.nombre)  
                         ProcesoCargado.registrar_evento(self.tiempo,ProcesoCargado.get_Duracion_de_Entrada_Salida(),"Entrada/Salida") ##registo el e/s
                     else:
                         self.Cola_de_Terminado.append(ProcesoCargado) ## si no quedan rafagas, lo termino
                         ProcesoCargado.registrar_evento(self.tiempo,self.TFP,"Finalizacion")
+                        self.registro_eventos.registrar_proceso_empiza_TFP(self.tiempo, ProcesoCargado.nombre)
                         for _ in range(self.TFP):
                             self.tiempo += 1
                             self.Decrementar_Tiempos_bloqueados()
                         ProcesoCargado.set_Tiempo_de_Retorno(self.tiempo) 
+                        self.registro_eventos.registrar_proceso_terminado(self.tiempo, ProcesoCargado.nombre)
                 else:
                     self.Cola_de_Listos.append(ProcesoCargado)
+                    self.registro_eventos.registrar_corte_rafaga_quantum(self.tiempo, ProcesoCargado.nombre)
             else :
                 self.tiempo += 1
                 self.Decrementar_Tiempos_bloqueados()

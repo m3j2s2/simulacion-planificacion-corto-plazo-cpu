@@ -32,7 +32,7 @@ class SRT(Procesador):
                     self.Decrementar_Tiempos_bloqueados() ##decremetento el tiempo de e/s de los procesos bloqueados ya que sino no salen de ahi 
                     self.OrdernarLaColadeListosPorRafaga()
                 if duracion_de_evento>0:
-                    self.registro_eventos.registrar_inicio_rafaga(self.tiempo, ProcesoCargado.nombre)
+                    self.registro_eventos.registrar_inicio_rafaga(inicio_de_evento, ProcesoCargado.nombre)
                     ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
                     if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0 :
                         self.Cola_de_Listos.remove(ProcesoCargado)

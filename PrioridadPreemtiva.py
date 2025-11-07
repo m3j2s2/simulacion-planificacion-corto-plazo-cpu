@@ -31,7 +31,7 @@ class Prioridad(Procesador):
                     self.Decrementar_Tiempos_bloqueados()
                     self.OrdernarLaColadeListosPorPrioridad() # vuelvo a ordenar por los procesos que se desbloqueen tienen mayor prioridad
                 if duracion_de_evento>0: 
-                    self.registro_eventos.registrar_inicio_rafaga(self.tiempo, ProcesoCargado.nombre)
+                    self.registro_eventos.registrar_inicio_rafaga(inicio_de_evento, ProcesoCargado.nombre)
                     ProcesoCargado.registrar_evento(inicio_de_evento,duracion_de_evento,"cpu")
                     if ProcesoCargado.get_Tiempo_de_Rafaga_Restante() == 0 :
                         self.Cola_de_Listos.remove(ProcesoCargado)
