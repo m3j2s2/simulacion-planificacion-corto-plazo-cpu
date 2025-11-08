@@ -23,9 +23,6 @@ class Proceso:
         self.duracion_de_entrada_salida_restante = duracion_de_entrada_salida
         self.Tiempo_de_Rafaga_Restante = duracion_de_rafaga
         self.Rafagas_restantes = cantidad_de_rafagas
-        self.Tiempo_de_Inicio = 0
-        self.tiempo_de_retorno = 0
-        self.tiempo_de_retorno_normalizado = 0
         self.Tuplas = []
 
     def get_Nombre(self):
@@ -41,17 +38,18 @@ class Proceso:
     def get_Prioridad_Externa(self):
         return self.prioridad_externa
     
-    def set_Tiempo_de_Retorno(self,tiempo: int):
-        self.tiempo_de_retorno = tiempo - self.Tiempo_de_Inicio
+    def get_datos_finales(self):
+        inicio_tip, duracion_tip, _ = self.Tuplas[0]
+        inicio_tfp, duracion_tfp, _ = self.Tuplas[-1]
 
-    def get_Tiempo_de_Retorno(self):
-        return self.tiempo_de_retorno
-
-    def get_tiempo_de_retorno_normalizado(self):
-        if self.Tiempo_de_Inicio != 0 and self.tiempo_de_retorno != 0 : 
-            return self.tiempo_de_retorno/(self.duracion_de_rafaga*self.cantidad_de_rafagas)
-        else: 
-            return -1
+        tiempo_de_retorno = inicio_tfp+duracion_tfp
+        tiempo_de_retorno_normalizado = tiempo_de_retorno/(self.cantidad_de_rafagas * self.duracion_de_rafaga)
+        tiempo_de_espera = inicio_tfp-(inicio_tip+duracion_tip)
+        for _, duracion, tipo in self.Tuplas:
+            tipo = tipo.lower()
+            if tipo in ["cpu", "tcp", "entrada/salida"]:
+                tiempo_de_espera -= duracion
+        return self.nombre,tiempo_de_retorno,tiempo_de_retorno_normalizado,tiempo_de_espera
 
     def Consumir_Rafaga(self):
         if self.Tiempo_de_Rafaga_Restante > 0:
@@ -62,8 +60,6 @@ class Proceso:
     
     def reset_Tiempo_de_Rafaga_Restante(self):
         self.Tiempo_de_Rafaga_Restante = self.duracion_de_rafaga
-
-    
 
     def Reducir_Rafagas_restantes(self):
         self.Rafagas_restantes -= 1

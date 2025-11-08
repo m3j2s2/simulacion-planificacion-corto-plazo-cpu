@@ -19,6 +19,8 @@ class Procesador:
         self.Cola_de_Terminado : list[Proceso]= []
         self.tiempo = 0
         self.registro_eventos = RegistroEventos() #esto es lo que me va a ayudar a crear el archivo con el seguimiento del programa
+        self.tiempo_Ocioso = 0
+
 
     def Cargar_Procesos(self, procesos):
         if not isinstance(procesos, list):
@@ -59,6 +61,14 @@ class Procesador:
             self.registro_eventos.registrar_incorporacion_proceso(self.tiempo, proceso.nombre)
             proceso.registrar_evento(inicio_de_evento,duracion_de_evento,'tip')
             self.AceptarProcesos()  ##verifico si hay mas procesos para aceptar en el mismo tiempo
+
+    def datos_simulacion(self):
+    ## Agrega los datos de cada proceso terminado
+        for proceso in self.Cola_de_Terminado:
+            self.registro_eventos.Agregar_Tabla_Finalproceso(proceso.get_datos_finales())
+
+        ## Establecer el tiempo que la CPU estuvo ociosa
+        self.registro_eventos.establecer_tiempo_ocioso(self.tiempo_Ocioso)
 
     @abstractmethod
     def simulacion(self):

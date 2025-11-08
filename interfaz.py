@@ -317,6 +317,10 @@ class SimuladorGUI:
             messagebox.showerror("Error", "No hay eventos para guardar")
             return
         
+        # IMPORTANTE: Recopilar datos estadísticos antes de generar el archivo
+        if hasattr(self.processor, 'datos_simulacion'):
+            self.processor.datos_simulacion()
+        
         # Obtener nombre de archivo sugerido
         politica = self.politica_var.get().replace(" ", "_")
         nombre_sugerido = f"eventos_simulacion_{politica}.txt"

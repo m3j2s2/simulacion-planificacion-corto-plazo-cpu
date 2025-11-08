@@ -43,9 +43,9 @@ class FCFS(Procesador):
                     for _ in range(self.TFP):
                         self.tiempo+=1
                         self.Decrementar_Tiempos_bloqueados()
-                    ProcesoCargado.set_Tiempo_de_Retorno(self.tiempo) 
                     self.registro_eventos.registrar_proceso_terminado(self.tiempo, ProcesoCargado.nombre)
             else :
                 self.tiempo += 1
+                self.tiempo_Ocioso +=1
                 self.Decrementar_Tiempos_bloqueados()
         self.Cola_de_Terminado.sort(key=lambda x: x.get_Tiempo_de_Arribo())
