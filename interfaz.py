@@ -5,6 +5,12 @@ from pathlib import Path
 from Procesos import Proceso
 from graficador_gantt import GraficadorGantt
 from cargador_politicas import CargarPoliticas
+import sys
+import os
+
+if getattr(sys, 'frozen', False):
+    # Si está ejecutándose como ejecutable
+    os.chdir(sys._MEIPASS) # type: ignore
 
 class SimuladorGUI:
     def __init__(self, root):
